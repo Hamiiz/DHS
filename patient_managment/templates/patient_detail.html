@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DHS - User Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-blue-50">
+
+    <header class="flex justify-between items-center p-6">
+        <div class="flex items-center space-x-2">
+            <img alt="SMedico logo" class="w-10 h-10" height="40" src="https://storage.googleapis.com/a1aa/image/kEfNXkvVgj5HF-FdW9m2nGYAYkSgmZyfOWNXXnI9zUo.jpg" width="40" />
+            <span class="text-2xl font-bold text-teal-600">DHS</span>
+        </div>
+        <div class="space-x-4">
+            <a class="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600" href="/create_appointment">Create Appointment</a>
+            <a class="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600" href="/logout">Logout</a>
+        </div>
+    </header>
+
+  
+    <main class="flex flex-col items-center text-center mt-16">
+
+        <div class="bg-white shadow-md rounded-lg w-11/12 sm:w-3/4 lg:w-1/2 p-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">User Details</h1>
+            <div class="mb-4">
+                <p class="text-lg font-medium text-gray-700">Name: {{ patient.name }}</p>
+                <p class="text-lg font-medium text-gray-700">Phone: {{ patient.phone_number }}</p>
+                <p class="text-lg font-medium text-gray-700">Email: {{ patient.email }}</p>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">QR Code</h2>
+    
+            <div class="mt-4 text-center">
+                <img src="{{ patient.qr_code.url }}" alt="QR Code for {{ patient.name }}" class="max-w-full rounded-lg shadow-lg mx-auto " />
+            </div>
+            <div class="appointments">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Appointments</h2>
+                <div class="mt-4">
+                    <table class="w-full my-4 bg-white shadow-md rounded-lg">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Date</th>
+                                <th class="text-left">Time</th>
+                                <th class="text-left">Doctor</th>
+                                <th class="text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                                <tr>
+                                    <td>{{ appointment.date }}</td>
+                                    <td>{{ appointment.time }}</td>
+                                    <td>{{ appointment.doctor }}</td>
+                                    <td>
+                                        <a href="/appointment/{{ appointment.id }}" class="text-teal-500 hover:text-teal-600">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="space-x-4">
+                <a class="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600" href="/create_appointment">Create Appointment</a>
+            </div>
+        </div>
+    </main>
+
+ 
+    <footer class="flex justify-center items-center p-4 mt-8">
+        <p class="text-gray-600">&copy; 2025 DHS - User Management</p>
+    </footer>
+</body>
+</html>
