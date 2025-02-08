@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .models import User, Doctor, Appointment, Payment
 from .forms import UserForm, AppointmentForm, PaymentForm
 from .modules.chapa import chapa_payment_init, verify_payment
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password,check_password
 from django.http import HttpResponse
 import datetime
 
@@ -21,34 +22,44 @@ def register_patient(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            patient = {
-
-        }
-        for i in form:
-                patient[i.name] = i.value()
-        patient['password'] = make_password(patient['password'])
-        form = UserForm(patient)
-        form.save()
-        return redirect('patient_detail', patient_id=form.instance.id)
+            name=form['name'].value(),
+            phone_number=form['phone_number'].value()
+            email=form['email'].value()
+            username=form['username'].value()
+            password=form['password'].value()
+            user = User(
+                name = name,
+                email=email,
+                username=username.lower(),
+                password=password.strip(),
+                phone_number=phone_number
+            )
+            
+            user.set_password(str(password))
+            user.save()
+            current_user = User.objects.get(username=username)
+            return redirect('patient_detail', patient_id=current_user.id)
     else:
         form = UserForm()
     return render(request, 'register_patient.html', {'form': form})
 
 def login_user(request):
     if request.method == 'POST':
-        
-        username = request.POST['username']
-        password = request.POST['password']
-     
-    
-        patient = authenticate(request, username=username, password=password)
-        if patient is not None:
-            print('user found')
-            login(request, patient)
-            return redirect('patient_detail', patient_id=patient.id) 
-        else:
-            print('user not found')
-            return render(request, 'user_login.html', {'error': 'Invalid username or password'}) 
+            username = request.POST['username']
+            password = request.POST['password']
+       
+            try:
+                user = User.objects.get(username=username.lower())
+                print(user)
+                if check_password(password, user.password):
+                    print('Password is correct')
+                    login(request, user)
+                    return redirect('patient_detail', patient_id=user.id)
+                else:
+            
+                    return HttpResponse('Password is incorrect')
+            except User.DoesNotExist:
+                return HttpResponse('User does not exist')
     else:
     
         return render(request, 'user_login.html')
