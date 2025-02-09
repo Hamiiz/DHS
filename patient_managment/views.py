@@ -13,7 +13,7 @@ import datetime
 def Logout(request):
     
     logout(request)
-    return redirect('login')
+    return redirect('login_user')
 
 def homepage(request):
     return render(request, 'homepage.html')
@@ -22,7 +22,7 @@ def register_patient(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-            name=form['name'].value(),
+            name=form['name'].value()
             phone_number=form['phone_number'].value()
             email=form['email'].value()
             username=form['username'].value()
@@ -87,7 +87,7 @@ def create_appointment(request):
 def appointment_success(request):
     return render(request, 'appointment_success.html')
 
-
+@login_required
 def process_payment(request, patient_id):
     patient = get_object_or_404(User, id=patient_id)
     if request.method == 'POST':

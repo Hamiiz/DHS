@@ -4,8 +4,10 @@ from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.hashers import make_password
 import os
+from django.contrib.auth.models import AbstractUser
 
-class User(models.Model):
+
+class User(AbstractUser):
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, unique=True)
     email = models.EmailField(unique=True)
@@ -50,16 +52,15 @@ class Appointment(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     appointment_date = models.DateField()
     status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed')],default='Pending')
-    payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Unpaid', 'Unpaid')],default='Unpaid')
-
+    payment_status = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.patient.name} - {self.doctor.name}"
 
 class Payment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    reason = models.CharField(max_length=20, choices=[ ('Card fee', 'Card fee'),('Appointment fee', 'Appointment fee')],default='--')
-    is_paid = models.BooleanField(default=False)
+    cardfee_is_paid = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=100, unique=True)
     payment_date = models.DateTimeField(auto_now_add=True)
 
