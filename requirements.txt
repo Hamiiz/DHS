@@ -14,4 +14,5 @@ colorama
 idna
 sqlparse
 tzdata
+whitenoise
 urllib3
