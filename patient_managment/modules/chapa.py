@@ -1,5 +1,5 @@
 import requests
-
+from django.conf import settings
 import random as r
 import os
 
@@ -9,7 +9,7 @@ API_KEY = os.environ.get('CHAPA_API_KEY')
 def txn_gen():
     return f'chapatest{r.randint(0, 9999)*r.randint(1,999)+r.randint(0, 99)}'
 
-def chapa_payment_init(amt, patient,reason):
+def chapa_payment_init(amt, patient,reason,base):
 
     url = "https://api.chapa.co/v1/transaction/initialize"
     payload = {
@@ -21,7 +21,7 @@ def chapa_payment_init(amt, patient,reason):
         "phone_number": "0912345678",
         "tx_ref": txn_gen(),
         "callback_url": "https://webhook.site/01fdfa0e-8fd1-48a9-965d-1ffe73948501",
-        "return_url": f"http://127.0.0.1:8000/payment_success/{reason}/{patient.id}",
+        "return_url": f"{base}payment_success/{reason}/{patient.id}",
         "customization": {
         "title": "Card fees",
         "description": "A fee for a hospital access card"

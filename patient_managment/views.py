@@ -142,7 +142,8 @@ def process_payment(request, patient_id,reason):
             payment = form.save(commit=False)
             payment.patient = patient
             payment.amount = fixed_amount
-            chapa_response = chapa_payment_init(fixed_amount, patient,reason)
+            base_url = request.build_absolute_uri('/')
+            chapa_response = chapa_payment_init(fixed_amount, patient,reason,base_url)
 
             if chapa_response[0].status_code == 200:
                 chapa_data = chapa_response[0].json()
@@ -199,7 +200,7 @@ def payment_success(request,patient_id,reason):
             payment.save()
             return redirect('patient_detail', patient_id=patient_id)
         else:
-            return redirect(f'http://127.0.0.1:8000/process_payment/cardfee/{patient_id}/')
+            return redirect('process_payment',patient_id=patient_id,reason='cardfee')
     else:
         payment = patient.payments.filter(patient=patient_id,amount=
         150).order_by('-payment_date').first()
@@ -214,7 +215,7 @@ def payment_success(request,patient_id,reason):
             appointment.save()
             return redirect('patient_detail', patient_id=patient_id)
         else:
-            return redirect(f'http://127.0.0.1:8000/process_payment/appointmentfee/{patient_id}/')
+            return redirect('process_payment',patient_id=patient_id,reason='appointmentfee')
        
 @login_required
 def view_payment(request,txn_ref,patient_id):
