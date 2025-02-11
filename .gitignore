@@ -5,7 +5,7 @@ node_modules/
 *.log
 
 # Ignore environment variable files
-patient_management/modules/.env
+.env
 
 # Ignore build directories
 dist/
