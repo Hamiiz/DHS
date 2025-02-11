@@ -11,10 +11,9 @@ SECRET_KEY = 'django-insecure-*5+5qavgif)74n%hn*lr8f$#2=@5zi&=z668l2wkd*2br9a&aj
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.164.53','127.0.0.1','localhost']
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'patient_managment',
-     'django_chapa'
+  
 ]
 
 MIDDLEWARE = [
@@ -98,6 +97,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+import os
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+
+
+
 
 # settings.py
 MEDIA_URL = '/media/'

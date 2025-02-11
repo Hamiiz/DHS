@@ -1,0 +1,167 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .scrollable-table {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .fixed-width {
+            width: 150px;
+        }
+    </style>
+</head>
+<body class="bg-blue-50">
+    <header class="flex justify-between items-center p-6 bg-white shadow-md">
+        <div class="flex items-center space-x-2">
+            <img alt="SMedico logo" class="w-10 h-10" src="https://storage.googleapis.com/a1aa/image/kEfNXkvVgj5HF-FdW9m2nGYAYkSgmZyfOWNXXnI9zUo.jpg" />
+            <span class="text-2xl font-bold text-teal-600">DHS</span>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="{% url 'homepage' %}" class="hover:underline">Home</a></li>
+                    <li><a href="{% url 'scan_qr' %}" class="hover:underline">Scan QR</a></li>
+                    <li><a href="{% url 'logout' %}" class="hover:underline">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-6">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">Admin Dashboard</h2>
+        
+    
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h3 class="text-xl font-semibold text-teal-600 mb-4">Patient Visit History</h3>
+            <input type="text" id="appointmentSearch" placeholder="Search Appointments" class="mb-4 p-2 border rounded">
+            <div class="scrollable-table">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-teal-500 text-white">
+                            <th class="p-3 border fixed-width">Patient</th>
+                            <th class="p-3 border fixed-width">Doctor</th>
+                            <th class="p-3 border fixed-width">Date</th>
+                            <th class="p-3 border fixed-width">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentTable">
+                        {% for appointment in appointments %}
+                        <tr class="bg-blue-50">
+                            <td class="p-3 border">{{ appointment.patient.name }}</td>
+                            <td class="p-3 border">{{ appointment.doctor.name }}</td>
+                            <td class="p-3 border">{{ appointment.date }}</td>
+                            <td class="p-3 border">{{ appointment.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h3 class="text-xl font-semibold text-teal-600 mb-4">Payments</h3>
+            <input type="text" id="paymentSearch" placeholder="Search Payments" class="mb-4 p-2 border rounded">
+            <div class="scrollable-table">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-teal-500 text-white">
+                            <th class="p-3 border fixed-width">Patient</th>
+                            <th class="p-3 border fixed-width">Amount</th>
+                            <th class="p-3 border fixed-width">Transaction ID</th>
+                            <th class="p-3 border fixed-width">Payment Date</th>
+                            <th class="p-3 border fixed-width">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTable">
+                        {% for payment in payments %}
+                        <tr class="bg-blue-50">
+                            <td class="p-3 border">{{ payment.patient.name }}</td>
+                            <td class="p-3 border">ETB{{ payment.amount }}</td>
+                            <td class="p-3 border">{{ payment.transaction_id }}</td>
+                            <td class="p-3 border">{{ payment.date }}</td>
+                            <td class="p-3 border">{{ payment.method }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h3 class="text-xl font-semibold text-teal-600 mb-4">Doctor Schedules</h3>
+            <ul class="divide-y divide-gray-300">
+                {% for doctor in doctors %}
+                <li class="p-4"> <strong>{{ doctor.name }}</strong> - Available: {{ doctor.availability }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h3 class="text-xl font-semibold text-teal-600 mb-4">Statistics</h3>
+            <p class="text-gray-700">Most Visited Doctor: <strong>{{ most_visited_doctor.name }}</strong></p>
+            <canvas id="paymentChart"></canvas>
+        </div>
+    </div>
+
+    <footer class="flex justify-center items-center p-4 mt-8">
+        <p class="text-gray-600">2025 DHS - User Management</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+            
+        const paymentData = [
+        { date: '2025-01-01', amount: 100 },
+        { date: '2025-01-02', amount: 150 },
+        { date: '2025-01-03', amount: 200 },
+        { date: '2025-01-04', amount: 250 },
+        { date: '2025-01-05', amount: 300 }
+        ]
+        const labels = paymentData.map(entry => entry.date);
+            const amounts = paymentData.map(entry => entry.amount);  new Chart(document.getElementById('paymentChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Payment Trends',
+                        data: amounts,
+                        borderColor: 'teal',
+                        backgroundColor: 'rgba(0, 128, 128, 0.2)',
+                        borderWidth: 2
+                    }]
+                }
+            });
+
+        // Search function for appointments
+        document.getElementById('appointmentSearch').addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#appointmentTable tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchValue));
+                row.style.display = match ? '' : 'none';
+            });
+        });
+
+        // Search function for payments
+        document.getElementById('paymentSearch').addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#paymentTable tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchValue));
+                row.style.display = match ? '' : 'none';
+            });
+        });
+        </script>
+</body>
+</html>
