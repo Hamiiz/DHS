@@ -16,3 +16,4 @@ sqlparse
 tzdata
 whitenoise
 urllib3
+gunicorn
