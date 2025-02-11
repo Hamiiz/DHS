@@ -1,12 +1,15 @@
 import requests
-import json
-import random as r
 
-API_KEY = 'CHASECK_TEST-hycufSWVWycBiGYxxKYsKoiKfJhIAyeR'
+import random as r
+import os
+
+
+API_KEY = os.environ.get('CHAPA_API_KEY')
+
 def txn_gen():
     return f'chapatest{r.randint(0, 9999)*r.randint(1,999)+r.randint(0, 99)}'
 
-def chapa_payment_init(amt, patient,reason):      
+def chapa_payment_init(amt, patient,reason):
 
     url = "https://api.chapa.co/v1/transaction/initialize"
     payload = {

@@ -2,10 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+import sys
+import dotenv
+from django.conf import settings
 
 def main():
     """Run administrative tasks."""
+    dotenv.read_dotenv(override=True)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DHSN.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -19,4 +22,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+      
+   
+        main()

@@ -1,3 +1,4 @@
+
 <html lang="en">
  <head>
   <meta charset="utf-8"/>
@@ -5,10 +6,13 @@
   <title>
     DHS - User Management
   </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  {% comment %} <script src="https://cdn.tailwindcss.com">
+  </script> {% endcomment %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  {% load static %}
+  <link href="{% static 'tw.css' %}" rel="stylesheet"/>
+
   <style>
    body {
             font-family: 'Roboto', sans-serif;

@@ -81,9 +81,13 @@ def patient_detail(request, patient_id):
     patient = get_object_or_404(User, id=patient_id)
     payments= patient.payments.all()
     appointments = patient.appointments.all()
-    
-    return render(request, 'patient_detail.html', {'patient': patient,'payments':payments,'appointments':appointments,'patient_id':patient_id})
-
+    payment_amounts = []
+    for i in payments:
+        payment_amounts.append(i.amount)
+    if 200 in payment_amounts:
+       return render(request, 'patient_detail.html', {'patient': patient,'payments':payments,'appointments':appointments,'patient_id':patient_id})
+    else:
+        return redirect('process_payment', patient_id=patient_id,reason='cardfee')
 @login_required
 @user_passes_test(is_staff_user)
 def scan_qr(request):
